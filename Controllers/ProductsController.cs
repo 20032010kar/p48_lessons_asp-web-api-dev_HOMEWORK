@@ -64,7 +64,7 @@ namespace p48_lessons_asp.Controllers
             }
         }
 
-        // Єдиний правильний POST-метод для створення продукту з файлом через form-data
+        
         [HttpPost]
         public async Task<IActionResult> CreateProduct([FromForm] CreateProductRequest? model)
         {
@@ -110,7 +110,7 @@ namespace p48_lessons_asp.Controllers
                 _dataContext.Products.Add(newProduct);
                 await _dataContext.SaveChangesAsync();
 
-                // Якщо користувач прикріпив файл картинки
+                
                 if (model.productImage != null)
                 {
                     var file = model.productImage;
