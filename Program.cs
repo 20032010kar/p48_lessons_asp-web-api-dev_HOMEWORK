@@ -31,7 +31,7 @@ namespace p48_lessons_asp
                 var builder = WebApplication.CreateBuilder(args);
                 ValidatorOptions.Global.LanguageManager.Culture = new CultureInfo("en");
                 
-                // підключення логера замість стандартного
+                
                 builder.Host.UseSerilog();
                 builder.Services.AddSingleton<IRandomService, RandomService>();
                 builder.Services.AddSingleton<ISlugHelper, SlugHelper>();
@@ -41,16 +41,16 @@ namespace p48_lessons_asp
 
                 builder.Services.AddValidatorsFromAssemblyContaining<Program>();
                 
-                // ДОДАНО НАСТРОЙКУ ДЛЯ ІГНОРУВАННЯ ЦИКЛІЧНИХ ЗВ'ЯЗКІВ У JSON:
+                
                 builder.Services.AddControllers()
                     .AddJsonOptions(options =>
                     {
                         options.JsonSerializerOptions.ReferenceHandler = System.Text.Json.Serialization.ReferenceHandler.IgnoreCycles;
                     });
 
-                // сервіс який збирає метадані про всі ендпоінти(маршрути) у додатку
+                
                 builder.Services.AddEndpointsApiExplorer();
-                // сервіс генератор, який генрує специфікацію(JSON-файл), на основі якого будується веб-сторінка, з усіма ендпоінтами
+                
                 builder.Services.AddSwaggerGen(c =>
                 {
                     c.SwaggerDoc("v1", new Microsoft.OpenApi.OpenApiInfo
@@ -88,19 +88,15 @@ namespace p48_lessons_asp
                 }
                 var app = builder.Build();
 
-                // Мідлвеєр який логує запити
                 app.UseSerilogRequestLogging();
                 if (app.Environment.IsDevelopment())
                 {
-                    // створення кінцевої точки, яка буде містити згенерований JSON-файл з описом ендпоінтів
                     app.UseSwagger();
-                    // кінцева точка але вже з графічним інтерфейсом
                     app.UseSwaggerUI();
                 }
 
                 app.UseAuthorization();
 
-                // Зв'язує класи контролери з маршрутами
                 app.MapControllers();
 
                 app.Run();
@@ -112,7 +108,6 @@ namespace p48_lessons_asp
             }
             finally
             {
-                // В будь-якому випадку, закриваємо логер та вивантажуємо буфер на диск
                 Log.CloseAndFlush();
             }
         }
